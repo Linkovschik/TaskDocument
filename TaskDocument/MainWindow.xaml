@@ -1,12 +1,48 @@
-﻿<Window x:Class="TaskDocument.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskDocument"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="TaskDocument.MainWindow"
+        Title="MainWindow" Height="350" Width="525">
+
+    <Window.Resources>
+        <Style x:Key="ListViewStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <Button x:Name="addDocumentButton" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Добавить документ" Command="{Binding AddItemCommand}" CommandParameter="{x:Static local:ObservingWindowViewModel+ItemType.Document}"/>
+        <Button x:Name="addTaskButton" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Content="Добавить задачу" Command="{Binding AddItemCommand}" CommandParameter="{x:Static local:ObservingWindowViewModel+ItemType.Task}"/>
+        <ListView ItemsSource="{Binding Items}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="DataView" HorizontalAlignment="Stretch">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn HeaderContainerStyle="{StaticResource ListViewStyle}" Header="Название" Width="auto"  DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn HeaderContainerStyle="{StaticResource ListViewStyle}" Header="Тип" Width="auto"  DisplayMemberBinding="{Binding ItemType}"/>
+                    <GridViewColumn HeaderContainerStyle="{StaticResource ListViewStyle}" Header="Id" Width="auto"  DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn HeaderContainerStyle="{StaticResource ListViewStyle}" Header="" Width="auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="openFileButton" Content="Открыть" Command="{Binding ElementName=DataView, Path=DataContext.OpenItemCommand}" CommandParameter="{Binding Id}" Width="auto"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
     </Grid>
+
 </Window>

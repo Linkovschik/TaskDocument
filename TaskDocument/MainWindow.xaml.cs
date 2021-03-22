@@ -23,6 +23,37 @@ namespace TaskDocument
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new ObservingWindowViewModel();
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(DataContext is ObservingWindowViewModel vm)
+            {
+                vm.OpenItemWindow += OpenItemWindow;
+            }
+        }
+
+        private void OpenItemWindow(Item found_item)
+        {
+            Window itemWindow = null;
+
+            if (found_item is TaskItem)
+            {
+                itemWindow = new TaskWindow(found_item);
+            }
+            else if (found_item is DocumentItem)
+            {
+                itemWindow = new DocumentWindow(found_item);
+            }
+            else if (found_item == null)
+            {
+                throw new Exception("Не найден открываемый объект");
+            }
+            itemWindow.Owner = this;
+            itemWindow.Show();
         }
     }
 }
